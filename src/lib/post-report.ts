@@ -12,7 +12,7 @@ export const postReport = async (data: z.infer<typeof uploadSchema>) => {
   formData.append("patientId", data.patientId);
   formData.append("report", data.report);
 
-  const response = await fetch("http://localhost:3000/api/scan", {
+  const response = await fetch("/api/scan", {
     method: "POST",
     body: formData,
   });
