@@ -7,8 +7,8 @@ export const HomePage = () => {
   return (
     <div className="flex w-screen justify-center items-center flex-col p-8">
       <Logo></Logo>
-      <p className="max-w-[500px] text-center text-2xl mb-8">Náhravání dat z glukometrů, sensorů a pump snadněji.</p>
-      <div className="w-[400px] flex flex-col gap-4">
+      <p className="lg:max-w-[500px] text-center text-2xl mb-8">Náhravání dat z glukometrů, sensorů a pump snadněji.</p>
+      <div className="lg:w-[400px] flex flex-col gap-4">
         <Button variant="default" size="lg" className="gap-2 font-bold w-full" asChild>
           <Link to="/upload">
             <Upload />
