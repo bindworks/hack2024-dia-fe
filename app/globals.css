@@ -56,11 +56,11 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground min-h-screen;
+    @apply text-stone-800 min-h-screen;
     background: url("/background.png"), radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(255, 255, 255, 0) 60%);
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: 0% -50vh;
+    background-position: 0% 0vh;
   }
 }
