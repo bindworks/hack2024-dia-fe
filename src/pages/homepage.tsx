@@ -16,7 +16,7 @@ export const HomePage = () => {
           </Link>
         </Button>
         <Button variant="outline" size="lg" className="gap-2 font-bold w-full border-red-500 border-2" asChild>
-          <Link to="/help">
+          <Link to="https://www.ikem.cz/cs/centrum-diabetologie/edukacni-materialy/a-3602/">
             <HelpCircle />
             Ještě nevím jak výkaz získám
           </Link>
