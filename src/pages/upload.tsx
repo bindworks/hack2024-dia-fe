@@ -18,7 +18,44 @@ import { SubmitHandler, UseFormReturn, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { UseMutationResult, useMutation } from "react-query";
 import { Bar, BarChart, Legend, Tooltip } from "recharts";
+import {
+  NameType,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 import { z } from "zod";
+
+export type ChartTooltip = {
+  payload?: {
+    name?: NameType;
+    color?: string;
+    dataKey?: number | string;
+    value?: ValueType;
+  }[];
+  label?: string;
+};
+
+const CustomTooltip = ({ payload, label }: ChartTooltip) => {
+  if (!payload) {
+    return null;
+  }
+
+  return (
+    <div style={{ backgroundColor: "white", padding: "0.5rem" }}>
+      {label && (
+        <p style={{ padding: 0, margin: 0 }}>
+          <b>{label}</b>
+        </p>
+      )}
+      {[...payload].reverse().map((item, index) => (
+        <p key={index} style={{ color: item.color, margin: 0, padding: 0 }}>
+          <span style={{ fontWeight: "bold" }}>{item.name}:</span>
+          &nbsp;
+          <span>{item.value}</span>
+        </p>
+      ))}
+    </div>
+  );
+};
 
 export const Upload = () => {
   const form = useForm<z.infer<typeof uploadSchema>>({
@@ -84,7 +121,7 @@ const DataDisplay = ({
       <div className="bg-background p-4 gap-3 flex items-center flex-col rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold">In range parametry</h2>
         <BarChart width={250} height={500} data={parameters}>
-          <Tooltip />
+          <Tooltip content={CustomTooltip} />
           <Legend />
           <Bar dataKey="Velmi Nízká Hladina" stackId="a" fill="#c00007" />
           <Bar dataKey="Nízká Hladina" stackId="a" fill="#ff7177" />
