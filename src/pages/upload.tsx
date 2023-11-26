@@ -1,7 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { round } from "@/lib/helpers";
 import { postReport, uploadSchema } from "@/lib/post-report";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadCloud } from "lucide-react";
@@ -36,14 +43,31 @@ export const Upload = () => {
 
   return (
     <div className="flex items-center flex-col">
-      <h1 className="font-nunito text-6xl font-extrabold mb-8">{!mutations.isSuccess ? "Odesílání dat" : "Výsledek zpracování"}</h1>
-      {mutations.isSuccess ? <DataDisplay data={mutations.data}></DataDisplay> : <UploadForm mutations={mutations} form={form}></UploadForm>}
+      <h1 className="font-nunito text-6xl font-extrabold mb-8">
+        {!mutations.isSuccess ? "Odesílání dat" : "Výsledek zpracování"}
+      </h1>
+      {mutations.isSuccess ? (
+        <DataDisplay data={mutations.data}></DataDisplay>
+      ) : (
+        <UploadForm mutations={mutations} form={form}></UploadForm>
+      )}
     </div>
   );
 };
 
-const DataDisplay = ({ data }: { data: Awaited<ReturnType<typeof postReport>> }) => {
-  const { timeInRangeHigh, timeInRangeLow, timeInRangeNormal, timeInRangeVeryHigh, timeInRangeVeryLow, ...rest } = data;
+const DataDisplay = ({
+  data,
+}: {
+  data: Awaited<ReturnType<typeof postReport>>;
+}) => {
+  const {
+    timeInRangeHigh,
+    timeInRangeLow,
+    timeInRangeNormal,
+    timeInRangeVeryHigh,
+    timeInRangeVeryLow,
+    ...rest
+  } = data;
 
   const parameters = [
     {
@@ -76,45 +100,46 @@ const DataDisplay = ({ data }: { data: Awaited<ReturnType<typeof postReport>> })
             <TableRow className="w-full">
               <TableCell>Datum</TableCell>
               <TableCell>
-                {new Date(rest.periodStart as string).toLocaleDateString()} - {new Date(rest.periodEnd as string).toLocaleDateString()}
+                {new Date(rest.periodStart as string).toLocaleDateString()} -{" "}
+                {new Date(rest.periodEnd as string).toLocaleDateString()}
               </TableCell>
             </TableRow>
             <TableRow className="w-full">
               <TableCell>Aktivní čas</TableCell>
-              <TableCell>{rest.timeActive}</TableCell>
+              <TableCell>{round(rest.timeActive)}&nbsp;%</TableCell>
             </TableRow>
             <TableRow className="w-full">
               <TableCell>Průměrná glukóza</TableCell>
-              <TableCell>{rest.averageGlucose}</TableCell>
+              <TableCell>{round(rest.averageGlucose)}&nbsp;mmol/l</TableCell>
             </TableRow>
             <TableRow className="w-full">
               <TableCell>Směrodatná odchylka</TableCell>
-              <TableCell>{rest.stddevGlucose}</TableCell>
+              <TableCell>{round(rest.stddevGlucose)}&nbsp;mmol/l</TableCell>
             </TableRow>
             <TableRow className="w-full">
               <TableCell>Koeficient variace</TableCell>
-              <TableCell>{rest.variationCoefficient}</TableCell>
+              <TableCell>{round(rest.variationCoefficient)}&nbsp;%</TableCell>
             </TableRow>
             <TableRow className="w-full">
               <TableCell>GMI</TableCell>
-              <TableCell>{rest.gmi}</TableCell>
+              <TableCell>{round(rest.gmi)}&nbsp;mmol/mol</TableCell>
             </TableRow>
             {rest.dailyInsulinDose && (
               <TableRow className="w-full">
                 <TableCell>Denní dávka inzulinu</TableCell>
-                <TableCell>{rest.timeActive}</TableCell>
+                <TableCell>{round(rest.timeActive)}&nbsp;j.</TableCell>
               </TableRow>
             )}
             {rest.basalInsulin && (
               <TableRow className="w-full">
                 <TableCell>Denní dávka inzulinu</TableCell>
-                <TableCell>{rest.basalInsulin}</TableCell>
+                <TableCell>{round(rest.basalInsulin)}&nbsp;j.</TableCell>
               </TableRow>
             )}
             {rest.bolusInsulin && (
               <TableRow className="w-full">
                 <TableCell>Denní dávka inzulinu</TableCell>
-                <TableCell>{rest.bolusInsulin}</TableCell>
+                <TableCell>{round(rest.bolusInsulin)}&nbsp;j.</TableCell>
               </TableRow>
             )}
           </TableBody>
@@ -161,7 +186,10 @@ const UploadForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full max-w-[400px]">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 w-full max-w-[400px]"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -198,7 +226,10 @@ const UploadForm = ({
                   <span>{report.size / 1000}Kb</span>
                 </div>
               ) : (
-                <div {...getRootProps()} className="border border-stone-800 items-center p-4 border-dashed flex w-full  flex-col gap-3 rounded-lg bg-background">
+                <div
+                  {...getRootProps()}
+                  className="border border-stone-800 items-center p-4 border-dashed flex w-full  flex-col gap-3 rounded-lg bg-background"
+                >
                   <input {...getInputProps()} />
                   <UploadCloud />
                   <p>Nahrajte kliknutím nebo přetažením</p>
