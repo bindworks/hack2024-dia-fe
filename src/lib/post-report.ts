@@ -1,9 +1,12 @@
 import { z } from "zod";
 
 export const uploadSchema = z.object({
-  name: z.string(),
+  name: z.string().min(2, "Jméno musí mít alespoň 2 znaky"),
   patientId: z.string(),
-  report: z.custom<File>().refine((v) => v instanceof File, "Prosím, nahrajte validní soubor"),
+  report: z
+    .custom<File>()
+    .refine((v) => v instanceof File, "Prosím, nahrajte validní soubor")
+    .refine((v) => v.name.includes(".pdf"), "Prosím, nahrajte PDF soubor"),
 });
 
 export const postReport = async (data: z.infer<typeof uploadSchema>) => {

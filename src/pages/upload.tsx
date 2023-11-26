@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { round } from "@/lib/helpers";
 import { postReport, uploadSchema } from "@/lib/post-report";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UploadCloud } from "lucide-react";
+import { Trash, UploadCloud } from "lucide-react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { SubmitHandler, UseFormReturn, useForm } from "react-hook-form";
@@ -201,24 +201,26 @@ const UploadForm = ({
         <FormField
           control={form.control}
           name="name"
-          render={({ field }) => (
+          render={({ field, formState }) => (
             <FormItem>
               <FormLabel>Jméno</FormLabel>
               <FormControl>
                 <Input {...field}></Input>
               </FormControl>
+              <FormMessage>{formState.errors.name?.message}</FormMessage>
             </FormItem>
           )}
         ></FormField>
         <FormField
           control={form.control}
           name="patientId"
-          render={({ field }) => (
+          render={({ field, formState }) => (
             <FormItem>
               <FormLabel>Rodné Číslo</FormLabel>
               <FormControl>
                 <Input {...field}></Input>
               </FormControl>
+              <FormMessage>{formState.errors.patientId?.message}</FormMessage>
             </FormItem>
           )}
         ></FormField>
@@ -226,12 +228,17 @@ const UploadForm = ({
         <FormField
           control={form.control}
           name="report"
-          render={() => (
+          render={({ formState }) => (
             <FormItem>
               {report ? (
                 <div className="border bg-background flex items-center justify-between p-4 rounded-lg">
                   <span className="font-bold">{report.name}</span>
-                  <span>{report.size / 1000}Kb</span>
+                  <div className="flex items-center">
+                    <span>{report.size / 1000}Kb</span>
+                    <Button type="button" size="icon" className="ml-1" onClick={() => form.resetField("report")}>
+                      <Trash></Trash>
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div {...getRootProps()} className="border border-stone-800 items-center p-4 border-dashed flex w-full  flex-col gap-3 rounded-lg bg-background">
@@ -241,6 +248,7 @@ const UploadForm = ({
                   <p className="text-stone-700 text-sm">PDF (max 10mb)</p>
                 </div>
               )}
+              <FormMessage>{formState.errors.report?.message}</FormMessage>
             </FormItem>
           )}
         ></FormField>
