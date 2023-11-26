@@ -17,7 +17,7 @@ import { useDropzone } from "react-dropzone";
 import { SubmitHandler, UseFormReturn, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { UseMutationResult, useMutation } from "react-query";
-import { Bar, BarChart, Legend, Tooltip } from "recharts";
+import { Bar, BarChart, Legend, Tooltip, XAxis } from "recharts";
 import {
   NameType,
   ValueType,
@@ -120,9 +120,10 @@ const DataDisplay = ({
     <div className="gap-4 grid grid-cols-1 lg:grid-cols-2">
       <div className="bg-background p-4 gap-3 flex items-center flex-col rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold">In range parametry</h2>
-        <BarChart width={250} height={500} data={parameters}>
+        <BarChart width={500} height={500} data={parameters}>
           <Tooltip wrapperStyle={{ outline: "none" }} content={CustomTooltip} />
           <Legend />
+          <XAxis name="In range parametry" />
           <Bar dataKey="Velmi Nízká Hladina" stackId="a" fill="#c00007" />
           <Bar dataKey="Nízká Hladina" stackId="a" fill="#ff7177" />
           <Bar dataKey="V cíli" stackId="a" fill="#65bf1c" />
