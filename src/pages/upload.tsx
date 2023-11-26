@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { round } from "@/lib/helpers";
@@ -17,11 +11,8 @@ import { useDropzone } from "react-dropzone";
 import { SubmitHandler, UseFormReturn, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { UseMutationResult, useMutation } from "react-query";
-import { Bar, BarChart, Legend, Tooltip, XAxis } from "recharts";
-import {
-  NameType,
-  ValueType,
-} from "recharts/types/component/DefaultTooltipContent";
+import { Bar, BarChart, Legend, Tooltip } from "recharts";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { z } from "zod";
 
 export type ChartTooltip = {
@@ -43,14 +34,14 @@ const CustomTooltip = ({ payload, label }: ChartTooltip) => {
     <div style={{ backgroundColor: "white", padding: "0.5rem" }}>
       {label && (
         <p style={{ padding: 0, margin: 0 }}>
-          <b>{label}</b>
+          <b>In Range Parametry</b>
         </p>
       )}
       {[...payload].reverse().map((item, index) => (
         <p key={index} style={{ color: item.color, margin: 0, padding: 0 }}>
           <span style={{ fontWeight: "bold" }}>{item.name}:</span>
           &nbsp;
-          <span>{item.value}</span>
+          <span>{item.value}%</span>
         </p>
       ))}
     </div>
@@ -74,40 +65,24 @@ export const Upload = () => {
     },
     onError: (error) => {
       console.log(error);
-      toast("Něco se pokazilo" + error);
+      toast.error("Něco se pokazilo" + error);
     },
   });
 
   return (
     <div className="flex items-center flex-col">
-      <h1 className="font-nunito text-6xl font-extrabold mb-8">
-        {!mutations.isSuccess ? "Odesílání dat" : "Výsledek zpracování"}
-      </h1>
-      {mutations.isSuccess ? (
-        <DataDisplay data={mutations.data}></DataDisplay>
-      ) : (
-        <UploadForm mutations={mutations} form={form}></UploadForm>
-      )}
+      <h1 className="font-nunito text-6xl font-extrabold mb-8">{!mutations.isSuccess ? "Odesílání dat" : "Výsledek zpracování"}</h1>
+      {mutations.isSuccess ? <DataDisplay data={mutations.data}></DataDisplay> : <UploadForm mutations={mutations} form={form}></UploadForm>}
     </div>
   );
 };
 
-const DataDisplay = ({
-  data,
-}: {
-  data: Awaited<ReturnType<typeof postReport>>;
-}) => {
-  const {
-    timeInRangeHigh,
-    timeInRangeLow,
-    timeInRangeNormal,
-    timeInRangeVeryHigh,
-    timeInRangeVeryLow,
-    ...rest
-  } = data;
+const DataDisplay = ({ data }: { data: Awaited<ReturnType<typeof postReport>> }) => {
+  const { timeInRangeHigh, timeInRangeLow, timeInRangeNormal, timeInRangeVeryHigh, timeInRangeVeryLow, ...rest } = data;
 
   const parameters = [
     {
+      name: "In range parametry",
       "Velmi Vysoká Hladina": timeInRangeVeryHigh,
       "Vysoká Hladina": timeInRangeHigh,
       "V cíli": timeInRangeNormal,
@@ -123,7 +98,6 @@ const DataDisplay = ({
         <BarChart width={500} height={500} data={parameters}>
           <Tooltip wrapperStyle={{ outline: "none" }} content={CustomTooltip} />
           <Legend />
-          <XAxis name="In range parametry" />
           <Bar dataKey="Velmi Nízká Hladina" stackId="a" fill="#c00007" />
           <Bar dataKey="Nízká Hladina" stackId="a" fill="#ff7177" />
           <Bar dataKey="V cíli" stackId="a" fill="#65bf1c" />
@@ -138,8 +112,7 @@ const DataDisplay = ({
             <TableRow className="w-full">
               <TableCell>Datum</TableCell>
               <TableCell>
-                {new Date(rest.periodStart as string).toLocaleDateString()} -{" "}
-                {new Date(rest.periodEnd as string).toLocaleDateString()}
+                {new Date(rest.periodStart as string).toLocaleDateString()} - {new Date(rest.periodEnd as string).toLocaleDateString()}
               </TableCell>
             </TableRow>
             <TableRow className="w-full">
@@ -224,10 +197,7 @@ const UploadForm = ({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 w-full max-w-[400px]"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full max-w-[400px]">
         <FormField
           control={form.control}
           name="name"
@@ -264,10 +234,7 @@ const UploadForm = ({
                   <span>{report.size / 1000}Kb</span>
                 </div>
               ) : (
-                <div
-                  {...getRootProps()}
-                  className="border border-stone-800 items-center p-4 border-dashed flex w-full  flex-col gap-3 rounded-lg bg-background"
-                >
+                <div {...getRootProps()} className="border border-stone-800 items-center p-4 border-dashed flex w-full  flex-col gap-3 rounded-lg bg-background">
                   <input {...getInputProps()} />
                   <UploadCloud />
                   <p>Nahrajte kliknutím nebo přetažením</p>

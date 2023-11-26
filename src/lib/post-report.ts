@@ -3,7 +3,7 @@ import { z } from "zod";
 export const uploadSchema = z.object({
   name: z.string(),
   patientId: z.string(),
-  report: z.custom<File>().refine((v) => v instanceof File, "Prosím nahrajte validní soubor"),
+  report: z.custom<File>().refine((v) => v instanceof File, "Prosím, nahrajte validní soubor"),
 });
 
 export const postReport = async (data: z.infer<typeof uploadSchema>) => {
@@ -12,12 +12,18 @@ export const postReport = async (data: z.infer<typeof uploadSchema>) => {
   formData.append("patientId", data.patientId);
   formData.append("report", data.report);
 
-  const response = await fetch("/api/scan", {
+  const response = await fetch("http://localhost:3000/api/scan", {
     method: "POST",
     body: formData,
   });
 
-  return response.json() as {
+  const result = await response.json();
+
+  console.log(result);
+
+  if (!response.ok) throw new Error(result.error);
+
+  return result as {
     periodStart?: string;
     periodEnd?: string;
     /**
