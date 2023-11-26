@@ -121,7 +121,7 @@ const DataDisplay = ({
       <div className="bg-background p-4 gap-3 flex items-center flex-col rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold">In range parametry</h2>
         <BarChart width={250} height={500} data={parameters}>
-          <Tooltip content={CustomTooltip} />
+          <Tooltip wrapperStyle={{ outline: "none" }} content={CustomTooltip} />
           <Legend />
           <Bar dataKey="Velmi Nízká Hladina" stackId="a" fill="#c00007" />
           <Bar dataKey="Nízká Hladina" stackId="a" fill="#ff7177" />
